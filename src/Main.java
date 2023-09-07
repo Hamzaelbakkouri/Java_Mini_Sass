@@ -1,63 +1,82 @@
-<<<<<<< HEAD
 import DataBase.DB;
-import bookjava.Book;
-=======
-import Controllers.book;
-import DataBase.DB;
->>>>>>> d4df0675dad5c2cc9a9fb9070f4e045f0811dfa2
 
-import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-<<<<<<< HEAD
-
-    public static void PrincipalMenu(){
+    public static void PrincipalMenu() throws SQLException {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("************ WELCOME TO OUR LIBRARY *******************");
-        System.out.println("1 : _______________ to create a book ___________________ \n");
-=======
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        DB db = new DB();
-
 
         System.out.println("************ WELCOME TO OUR LIBRARY *******************");
-        System.out.println("1 : _______________ to create a book ___________________ \n \n");
->>>>>>> d4df0675dad5c2cc9a9fb9070f4e045f0811dfa2
+        System.out.println("1 : ______________ Search For a book _________________ ");
+        System.out.println("2 : _______________ Show All Books ___________________  ");
+        System.out.println("3 : _______________ Create a Book ____________________  ");
+        System.out.println("4 : ___________ Update Or Delete a Book ______________  ");
+        System.out.println("5 : _________________ Find Books _____________________  ");
 
-        System.out.println("Enter a number to implement the function : \n");
+        menu menu = new menu();
+        System.out.println("Enter a number to implement the Method : \n");
         int checker = Integer.parseInt(scanner.nextLine());
-
         switch (checker) {
             case 1:
-<<<<<<< HEAD
-                System.out.println("Choice is 1");
-=======
-                book book = new book();
-                book.createBook();
->>>>>>> d4df0675dad5c2cc9a9fb9070f4e045f0811dfa2
-                break;
-
+                menu.getOne();
+                System.out.println("Back to menu click 1 , else to exit :");
+                if (Integer.parseInt(scanner.nextLine()) == 1) {
+                    PrincipalMenu();
+                } else {
+                    break;
+                }
             case 2:
-                System.out.println("Choice is 2");
-                break;
+                menu.getAllBooks();
+                System.out.println("Back to menu click 1 , else to exit :");
+                if (Integer.parseInt(scanner.nextLine()) == 1) {
+                    PrincipalMenu();
+                } else {
+                    break;
+                }
 
             case 3:
-                System.out.println("Choice is 3");
-                break;
-
+                menu.insetBook();
+                System.out.println("Back to menu click 1 , else to exit :");
+                if (Integer.parseInt(scanner.nextLine()) == 1) {
+                    PrincipalMenu();
+                } else {
+                    break;
+                }
+            case 4:
+                menu.UpdateOrDeleteBook();
+                System.out.println("Back to menu click 1 , else to exit :");
+                if (Integer.parseInt(scanner.nextLine()) == 1) {
+                    PrincipalMenu();
+                } else {
+                    break;
+                }
+            case 5:
+                menu.getBooksByStatus();
+                System.out.println("Back to menu click 1 , else to exit :");
+                if (Integer.parseInt(scanner.nextLine()) == 1) {
+                    PrincipalMenu();
+                } else {
+                    break;
+                }
             default:
-                System.out.println("Choice is not 1, 2, or 3");
-                break;
+                System.out.println("Choice Not Found");
+                System.out.println("Back to menu click 1 , else to exit :");
+                if (Integer.parseInt(scanner.nextLine()) == 1) {
+                    PrincipalMenu();
+                } else {
+                    break;
+                }
         }
-<<<<<<< HEAD
 
     }
-    public static void main(String[] args) {
-        DB db = new DB();
 
-=======
->>>>>>> d4df0675dad5c2cc9a9fb9070f4e045f0811dfa2
+
+    public static void main(String[] args) {
+        try {
+            PrincipalMenu();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 }

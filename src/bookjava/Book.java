@@ -1,15 +1,16 @@
 package bookjava;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 public class Book {
     private double ISBN;
     private String Title;
     private String author;
-    private Date createDate;
+    private String createDate;
     private String status;
 
-    public Book(double isbn, String title, String Author, Date Createdate, String Status) {
+    public Book(double isbn, String title, String Author, String Createdate, String Status) {
         this.Title = title;
         this.ISBN = isbn;
         this.author = Author;
@@ -33,28 +34,28 @@ public class Book {
         status = Status;
     }
 
-    void setCreateDate(Date CreateDate) {
+    void setCreateDate(String CreateDate) {
         createDate = CreateDate;
     }
 
 
-    String getTitle() {
+    public String getTitle() {
         return Title;
     }
 
-    String getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    double getISBN() {
+    public double getISBN() {
         return ISBN;
     }
 
-    Date getCreateDate() {
+    public String getCreateDate() {
         return createDate;
     }
 
-    String getStatus() {
+    public String getStatus() {
         return status;
     }
 }

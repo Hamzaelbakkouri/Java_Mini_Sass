@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface DAO<T> {
-    T getOne(int id) throws SQLException;
+    T getOne(String Title) throws SQLException;
 
     List<T> getALL() throws SQLException;
 
@@ -12,5 +12,5 @@ public interface DAO<T> {
 
     T update(T t) throws SQLException;
 
-    int delete(T t) throws SQLException;
+    boolean delete(double t) throws SQLException;
 }

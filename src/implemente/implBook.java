@@ -1,49 +1,240 @@
 package implemente;
+
+import DataBase.DB;
 import bookjava.Book;
 import interfaces.bookDAO;
+import interfaces.status;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class implBook implements bookDAO {
 
     @Override
     public List<Book> getALL() throws SQLException {
-        return null;
+        Connection connection = DB.Connect();
+        List<Book> books = new ArrayList<>();
+        String sql = "SELECT * FROM books";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            String title = rs.getString("title");
+            double ISBN = rs.getDouble("ISBN");
+            String createdate = rs.getString("createdate");
+            String author = rs.getString("author");
+            String status = rs.getString("status");
+
+            Book book = new Book(ISBN, title, author, createdate, status);
+            books.add(book);
+        }
+
+        rs.close();
+        ps.close();
+        connection.close();
+
+        return books;
     }
 
     @Override
-    public Book getOne(int id) throws SQLException {
+    public Book getOne(String Title) throws SQLException {
+        Connection connection = DB.Connect();
+        String sql = "SELECT * FROM books WHERE title = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, Title);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            String title = rs.getString("title");
+            double ISBN = rs.getDouble("ISBN");
+            String author = rs.getString("author");
+            String createdate = rs.getString("createdate");
+            String status = rs.getString("status");
+
+            Book book = new Book(ISBN, title, author, createdate, status);
+            return book;
+        }
+        rs.close();
+        ps.close();
+        connection.close();
         return null;
     }
 
     @Override
     public List<Book> getByAuthor(String author) throws SQLException {
-        return null;
+        Connection connection = DB.Connect();
+        List<Book> books = new ArrayList<>();
+        String sql = "SELECT * FROM books WHERE author = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, author);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            String title = rs.getString("title");
+            double ISBN = rs.getDouble("ISBN");
+            String createdate = rs.getString("createdate");
+            String status = rs.getString("status");
+
+            Book book = new Book(ISBN, title, author, createdate, status);
+            books.add(book);
+        }
+
+        rs.close();
+        ps.close();
+        connection.close();
+
+        return books;
     }
 
     @Override
-    public Book getOneByIsbn(String isbn) throws SQLException {
-        return null;
+    public List<Book> getBooksByStatus(String status) throws SQLException {
+        Connection connection = DB.Connect();
+        List<Book> books = new ArrayList<>();
+        String sql = "SELECT * FROM books WHERE status = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, status);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            String title = rs.getString("title");
+            double ISBN = rs.getDouble("ISBN");
+            String createdate = rs.getString("createdate");
+            String Status = rs.getString("status");
+            String author = rs.getString("author");
+
+            Book book = new Book(ISBN, title, author, createdate, Status);
+            books.add(book);
+        }
+
+        rs.close();
+        ps.close();
+        connection.close();
+
+        return books;
+    }
+
+
+    @Override
+    public Book getOneByIsbn(double isbn) throws SQLException {
+        Connection connection = DB.Connect();
+        String sql = "SELECT * FROM books WHERE ISBN = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setDouble(1, isbn);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            String title = rs.getString("title");
+            String author = rs.getString("author");
+            String createdate = rs.getString("createdate");
+            String status = rs.getString("status");
+
+            Book book = new Book(isbn, title, author, createdate, status);
+            return book;
+        }
+        rs.close();
+        ps.close();
+        connection.close();
+        Book bk = getOneByIsbn(isbn);
+        if (bk == null) {
+            System.out.println("book not found");
+            return null;
+        }
+        return bk;
     }
 
     @Override
-    public List<Book> getAll() throws SQLException {
-        return null;
+    public Book updateToLostBook(double isbn) throws SQLException {
+        Connection connection = DB.Connect();
+        String sql = "UPDATE books SET status = ? WHERE ISBN = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, String.valueOf(status.perdu));
+        ps.setDouble(2, isbn);
+
+        int rs = ps.executeUpdate();
+
+        ps.close();
+        connection.close();
+        Book bk = getOneByIsbn(isbn);
+        if (bk == null) {
+            System.out.println("book not found");
+            return null;
+        }
+        return bk;
     }
+
 
     @Override
     public Book insert(Book Book) throws SQLException {
-        return null;
+        Connection connection = DB.Connect();
+        String sql = "INSERT INTO books (title , createdate , ISBN , author , status) VALUES ( ? , ? , ? , ? , ? )";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, Book.getTitle());
+        ps.setString(2, Book.getCreateDate());
+        ps.setDouble(3, Book.getISBN());
+        ps.setString(4, Book.getAuthor());
+        ps.setString(5, Book.getStatus());
+
+        int rs = ps.executeUpdate();
+
+        ps.close();
+        connection.close();
+        Book bk = getOneByIsbn(Book.getISBN());
+        if (bk == null) {
+            System.out.println("book not found");
+            return null;
+        }
+        return bk;
     }
 
     @Override
     public Book update(Book Book) throws SQLException {
-        return null;
+        Connection connection = DB.Connect();
+        String sql = "UPDATE books SET title = ? , createdate = ? , author = ? , status = ? WHERE ISBN = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, Book.getTitle());
+        ps.setString(2, Book.getCreateDate());
+        ps.setString(3, Book.getAuthor());
+        ps.setString(4, Book.getStatus());
+        ps.setDouble(5, Book.getISBN());
+
+        int rs = ps.executeUpdate();
+
+        ps.close();
+        connection.close();
+        Book bk = getOneByIsbn(Book.getISBN());
+        if (bk == null) {
+            System.out.println("book not found");
+            return null;
+        }
+        return bk;
     }
 
     @Override
-    public int delete(Book Book) throws SQLException {
-        return 0;
+    public boolean delete(double isbn) throws SQLException {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        boolean last = false;
+        try {
+            connection = DB.Connect();
+            String sql = "DELETE FROM books WHERE ISBN = ?";
+            ps = connection.prepareStatement(sql);
+            ps.setDouble(1, isbn);
+
+            int rowCount = ps.executeUpdate();
+
+            if (rowCount == 0) {
+                last = false;
+            } else {
+                last = true;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return last;
     }
+
+
 }

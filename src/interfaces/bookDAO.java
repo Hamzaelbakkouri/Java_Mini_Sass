@@ -9,7 +9,6 @@ import java.util.List;
 public interface bookDAO extends DAO<Book> {
 
     Book getOne(String title) throws SQLException;
-
     List<Book> getByAuthor(String author) throws SQLException;
     List<Book> getBooksByStatus(String status) throws SQLException;
 

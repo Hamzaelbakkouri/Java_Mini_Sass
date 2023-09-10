@@ -14,6 +14,13 @@ public class Member {
         this.phoneNumber = phoneNumber;
     }
 
+    public Member(String name, String cin, String phoneNumber) {
+        this.id = id;
+        this.name = name;
+        this.cin = cin;
+        this.phoneNumber = phoneNumber;
+    }
+
     void setID(int ID) {
         id = ID;
     }

@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface DAO<T> {
-    T getOne(String Title) throws SQLException;
+    T getOne(String t) throws SQLException;
 
     List<T> getALL() throws SQLException;
 

@@ -41,7 +41,23 @@ public class implMember implements memberDAO {
 
     @Override
     public Member insert(Member member) throws SQLException {
-        return null;
+        Connection connection = DB.Connect();
+        String sql = "INSERT INTO membre (name , cin , phoneNumber ) VALUES ( ? , ? , ?  )";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, member.getName());
+        ps.setString(2, member.getCIN());
+        ps.setString(3, member.getPhoneNumber());
+
+        int rs = ps.executeUpdate();
+
+        ps.close();
+        connection.close();
+        Member mb = getOne(member.getCIN());
+        if (mb == null) {
+            System.out.println("Member not found");
+            return null;
+        }
+        return mb;
     }
 
     @Override

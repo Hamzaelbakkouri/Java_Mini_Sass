@@ -1,8 +1,6 @@
 package bookjava;
 
 
-import java.util.Date;
-
 public class Book {
     private double ISBN;
     private String Title;

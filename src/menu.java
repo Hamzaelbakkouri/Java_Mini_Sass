@@ -10,6 +10,10 @@ import interfaces.bookDAO;
 import interfaces.memberDAO;
 import interfaces.status;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -192,6 +196,55 @@ public class menu {
             return;
         }
     }
+
+    public void changeBookStatut() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        bookDAO bookdao = new implBook();
+        List<Book> books = bookdao.getALL();
+        int counter = 1;
+        for (Book book : books) {
+            System.out.println("Book number " + counter + ":");
+            System.out.println("Title: " + book.getTitle());
+            System.out.println("Author: " + book.getAuthor());
+            System.out.println("ISBN: " + book.getISBN());
+            System.out.println("Create Date: " + book.getCreateDate());
+            System.out.println("Status: " + book.getStatus());
+            System.out.println("---------------------------------------");
+            counter++;
+        }
+        System.out.println("enter book num to change statut : ");
+        int bookChoice = Integer.parseInt(scanner.nextLine());
+        Book bookInfo = books.get(bookChoice - 1);
+        System.out.println("choose statut :\n 1 : Disponible , \n 2 : Perdu");
+        int choise2 = Integer.parseInt(scanner.nextLine());
+        String Status = null;
+        if (choise2 == 1) {
+            Status = String.valueOf(status.disponible);
+        } else if (choise2 == 2) {
+            Status = String.valueOf(status.perdu);
+        }
+        Book newBook = new Book(bookInfo.getISBN(), bookInfo.getTitle(), bookInfo.getAuthor(), bookInfo.getCreateDate(), Status);
+        Book book = bookdao.updateBookStatut(newBook);
+
+        System.out.println("\nTitle: " + book.getTitle());
+        System.out.println("Author: " + book.getAuthor());
+        System.out.println("ISBN: " + book.getISBN());
+        System.out.println("Create Date: " + book.getCreateDate());
+        System.out.println("Status: " + book.getStatus());
+        System.out.println("---------------------------------------");
+    }
+
+    public void Statistiques() throws SQLException {
+        bookDAO bookdao = new implBook();
+        int countDisponible = bookdao.StatistiqueDisponible();
+        int countLost = bookdao.StatistiqueLost();
+        int countBorrow = bookdao.StatistiqueBorrow();
+        int countAllBooks = bookdao.AllBooks();
+        System.out.println("Disponible Books (" + countDisponible + ")");
+        System.out.println("Lost Books (" + countLost + ")");
+        System.out.println("Borrow Books (" + countBorrow + ")");
+        System.out.println("ALL Books (" + countAllBooks + ")");
+    }
 //        MEMBER PART
 
     public Member getOneMember() throws SQLException {
@@ -211,6 +264,18 @@ public class menu {
             System.out.println("---------------------------------------");
         }
         return member;
+    }
+
+    public void getALL() throws SQLException {
+        memberDAO memberdao = new implMember();
+        List<Member> members = memberdao.getALL();
+        for (Member member : members) {
+            System.out.println("id: " + member.getID());
+            System.out.println("CIN: " + member.getCIN());
+            System.out.println("name: " + member.getName());
+            System.out.println("phone number: " + member.getPhoneNumber());
+            System.out.println("---------------------------------------");
+        }
     }
 
     public Member insertMember() throws SQLException {
@@ -291,6 +356,19 @@ public class menu {
                 System.out.println(nowDate);
                 System.out.println("enter a date higher than today");
             }
+        }
+    }
+
+    public void checkDates() throws SQLException {
+        BorrowDAO borrowdao = new implBorrow();
+        List<Book> bk = borrowdao.CheckDates();
+        for (Book book : bk) {
+            System.out.println("Title: " + book.getTitle());
+            System.out.println("Author: " + book.getAuthor());
+            System.out.println("ISBN: " + book.getISBN());
+            System.out.println("Create Date: " + book.getCreateDate());
+            System.out.println("Status: " + book.getStatus());
+            System.out.println("---------------------------------------");
         }
     }
 }

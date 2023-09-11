@@ -6,7 +6,7 @@ import bookjava.Member;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface memberDAO extends DAO<Member> {
+public interface memberDAO  {
 
     Member getOne(String cin) throws SQLException;
 
@@ -16,5 +16,5 @@ public interface memberDAO extends DAO<Member> {
 
     Member update(Member member) throws SQLException;
 
-    boolean delete(double isbn) throws SQLException;
+    boolean delete(Member member) throws SQLException;
 }

@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class implBook implements bookDAO {
@@ -41,6 +40,7 @@ public class implBook implements bookDAO {
         return books;
     }
 
+
     @Override
     public Book getOne(String Title) throws SQLException {
         Connection connection = DB.Connect();
@@ -68,18 +68,19 @@ public class implBook implements bookDAO {
     public List<Book> getByAuthor(String author) throws SQLException {
         Connection connection = DB.Connect();
         List<Book> books = new ArrayList<>();
-        String sql = "SELECT * FROM books WHERE author = ?";
+        String sql = "SELECT * FROM books WHERE author LIKE ?";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, author);
+        ps.setString(1, '%' + author + '%');
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
             String title = rs.getString("title");
             double ISBN = rs.getDouble("ISBN");
             String createdate = rs.getString("createdate");
+            String Author = rs.getString("author");
             String status = rs.getString("status");
 
-            Book book = new Book(ISBN, title, author, createdate, status);
+            Book book = new Book(ISBN, title, Author, createdate, status);
             books.add(book);
         }
 
@@ -146,18 +147,17 @@ public class implBook implements bookDAO {
     }
 
     @Override
-    public Book updateToLostBook(double isbn) throws SQLException {
+    public Book updateBookStatut(Book book) throws SQLException {
         Connection connection = DB.Connect();
         String sql = "UPDATE books SET status = ? WHERE ISBN = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, String.valueOf(status.perdu));
-        ps.setDouble(2, isbn);
-
+        ps.setString(1, book.getStatus());
+        ps.setDouble(2, book.getISBN());
         int rs = ps.executeUpdate();
 
         ps.close();
         connection.close();
-        Book bk = getOneByIsbn(isbn);
+        Book bk = getOneByIsbn(book.getISBN());
         if (bk == null) {
             System.out.println("book not found");
             return null;
@@ -234,6 +234,80 @@ public class implBook implements bookDAO {
             System.out.println(e);
         }
         return last;
+    }
+
+    @Override
+    public Integer StatistiqueDisponible() throws SQLException {
+        Connection connection = DB.Connect();
+        String sql = "SELECT COUNT(*) FROM books WHERE status = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, String.valueOf(status.disponible));
+        ResultSet rs = ps.executeQuery();
+
+        int rowCount = 0;
+        if (rs.next()) {
+            rowCount = rs.getInt(1);
+        }
+
+        rs.close();
+        ps.close();
+        connection.close();
+        return rowCount;
+    }
+
+
+    @Override
+    public Integer StatistiqueLost() throws SQLException {
+        Connection connection = DB.Connect();
+        String sql = "SELECT COUNT(*) FROM books WHERE status = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, String.valueOf(status.perdu));
+        ResultSet rs = ps.executeQuery();
+
+        int rowCount = 0;
+        if (rs.next()) {
+            rowCount = rs.getInt(1);
+        }
+
+        rs.close();
+        ps.close();
+        connection.close();
+        return rowCount;
+    }
+
+    @Override
+    public Integer StatistiqueBorrow() throws SQLException {
+        Connection connection = DB.Connect();
+        String sql = "SELECT COUNT(*) FROM books WHERE status = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, String.valueOf(status.enprunté));
+        ResultSet rs = ps.executeQuery();
+
+        int rowCount = 0;
+        if (rs.next()) {
+            rowCount = rs.getInt(1);
+        }
+        rs.close();
+        ps.close();
+        connection.close();
+        return rowCount;
+    }
+
+    @Override
+    public Integer AllBooks() throws SQLException {
+        Connection connection = DB.Connect();
+        String sql = "SELECT COUNT(*) FROM books";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        int rowCount = 0;
+        if (rs.next()) {
+            rowCount = rs.getInt(1);
+        }
+        rs.close();
+        ps.close();
+        connection.close();
+        return rowCount;
     }
 
 

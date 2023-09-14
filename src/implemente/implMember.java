@@ -63,7 +63,7 @@ public class implMember implements memberDAO {
     @Override
     public Member insert(Member member) throws SQLException {
         Connection connection = DB.Connect();
-        String sql = "INSERT INTO membre (name , cin , phoneNumber ) VALUES ( ? , ? , ?  )";
+        String sql = "INSERT INTO membre (name , cin , phoneNumber ) VALUES ( ? , ? , ? )";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, member.getName());
         ps.setString(2, member.getCIN());
@@ -84,13 +84,11 @@ public class implMember implements memberDAO {
     @Override
     public Member update(Member member) throws SQLException {
         Connection connection = DB.Connect();
-        String sql = "UPDATE books SET title = ? , createdate = ? , author = ? , status = ? WHERE ISBN = ?";
+        String sql = "UPDATE membre SET name = ? , phoneNumber = ? WHERE cin = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, member.getID());
-        ps.setString(2, member.getCIN());
-        ps.setString(3, member.getName());
-        ps.setString(4, member.getPhoneNumber());
-
+        ps.setString(1, member.getName());
+        ps.setString(2, member.getPhoneNumber());
+        ps.setString(3, member.getCIN());
         int rs = ps.executeUpdate();
 
         ps.close();
@@ -122,7 +120,7 @@ public class implMember implements memberDAO {
                 last = true;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return last;
     }

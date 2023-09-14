@@ -219,9 +219,10 @@ public class implBook implements bookDAO {
         boolean last = false;
         try {
             connection = DB.Connect();
-            String sql = "DELETE FROM books WHERE ISBN = ?";
+            String sql = "DELETE FROM books WHERE ISBN = ? AND status <> ?";
             ps = connection.prepareStatement(sql);
             ps.setDouble(1, isbn);
+            ps.setString(2, String.valueOf(status.enprunté));
 
             int rowCount = ps.executeUpdate();
 

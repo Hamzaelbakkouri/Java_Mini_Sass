@@ -1,11 +1,14 @@
 package bookjava;
 
+import java.util.List;
+
 public class Member {
 
     private int id;
     private String name;
     private String cin;
     private String phoneNumber;
+    private List<Borrow> BorrowMember;
 
     public Member(int id, String name, String cin, String phoneNumber) {
         this.id = id;
@@ -37,6 +40,10 @@ public class Member {
         phoneNumber = PhoneNumber;
     }
 
+    void setBorrowMember(List<Borrow> borrowMember) {
+        BorrowMember = borrowMember;
+    }
+
 
     public int getID() {
         return id;
@@ -52,6 +59,10 @@ public class Member {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public List<Borrow> getBorrowMember() {
+        return BorrowMember;
     }
 
 }

@@ -190,7 +190,7 @@ public class menu {
             if (last == true) {
                 System.out.println("Book with ISBN " + isbn + " deleted successfully");
             } else {
-                System.out.println("Book with ISBN " + isbn + " not found");
+                System.out.println("ISBN " + isbn + " books cannot be deleted");
             }
         } else {
             return;
@@ -302,6 +302,55 @@ public class menu {
         return member;
     }
 
+    public void updateOrDeleteMember() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        memberDAO memberdao = new implMember();
+        List<Member> members = memberdao.getALL();
+        System.out.println("1: to update member , 2: to delete member :");
+        int choice = Integer.parseInt(scanner.nextLine());
+        int counter = 1;
+        for (Member member : members) {
+            System.out.println("number to choose " + counter + "");
+            System.out.println("CIN: " + member.getCIN());
+            System.out.println("ID: " + member.getID());
+            System.out.println("name: " + member.getName());
+            System.out.println("phone number: " + member.getPhoneNumber());
+            System.out.println("---------------------------------------");
+            counter++;
+        }
+        if (choice == 1) {
+            System.out.println("Choose member to update : ");
+            int membernum = Integer.parseInt(scanner.nextLine());
+            Member member = members.get(membernum - 1);
+
+            System.out.println("update member name : ");
+            String name = scanner.nextLine();
+
+            System.out.println("update member phone Number : ");
+            String phoneNumber = scanner.nextLine();
+
+            Member newMember = new Member(name, member.getCIN(), phoneNumber);
+            memberDAO memberdaoo = new implMember();
+            Member updates = memberdaoo.update(newMember);
+            if (updates != null) {
+                System.out.println("\nid: " + updates.getID());
+                System.out.println("Name: " + updates.getName());
+                System.out.println("CIN: " + member.getCIN());
+                System.out.println("Phone number: " + updates.getPhoneNumber());
+                System.out.println("---------------------------------------");
+            }
+        } else if (choice == 2) {
+            System.out.println("Choose member to delete : ");
+            int membernum = Integer.parseInt(scanner.nextLine());
+            Member member = members.get(membernum - 1);
+            memberDAO memberdaoo = new implMember();
+            Boolean isDeleted = memberdaoo.delete(member);
+            if (isDeleted) {
+                System.out.println("member with cin : " + member.getCIN() + " deleted successfully");
+            }
+        }
+    }
+
     //    Borrowing Part
     public void Borrow_a_Book() throws SQLException, ParseException {
         Scanner scanner = new Scanner(System.in);
@@ -341,7 +390,6 @@ public class menu {
             java.sql.Date nowDate = new java.sql.Date(borrowDate.getTime());
 
             if (returnDate.after(nowDate)) {
-
                 Borrow br = new Borrow(book, member, nowDate, returnDate);
                 BorrowDAO borrowdao = new implBorrow();
                 boolean borrowBook = borrowdao.insert(br);
@@ -361,14 +409,6 @@ public class menu {
 
     public void checkDates() throws SQLException {
         BorrowDAO borrowdao = new implBorrow();
-        List<Book> bk = borrowdao.CheckDates();
-        for (Book book : bk) {
-            System.out.println("Title: " + book.getTitle());
-            System.out.println("Author: " + book.getAuthor());
-            System.out.println("ISBN: " + book.getISBN());
-            System.out.println("Create Date: " + book.getCreateDate());
-            System.out.println("Status: " + book.getStatus());
-            System.out.println("---------------------------------------");
-        }
+        borrowdao.CheckDates();
     }
 }

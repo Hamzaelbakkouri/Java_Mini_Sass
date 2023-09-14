@@ -26,9 +26,10 @@ public class Book {
     void setAuthor(String Author) {
         author = Author;
     }
-//    void setAuthor(List Author) {
-//        BorrowBook;
-//    }
+
+    void setBorrowBooks(List<Borrow> borrowBook) {
+        BorrowBook = borrowBook;
+    }
 
     void setISBN(double isbn) {
         ISBN = isbn;
@@ -61,5 +62,9 @@ public class Book {
 
     public String getStatus() {
         return status;
+    }
+
+    public List<Borrow> getBorrowBooks() {
+        return BorrowBook;
     }
 }

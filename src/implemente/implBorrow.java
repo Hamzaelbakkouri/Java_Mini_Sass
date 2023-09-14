@@ -30,13 +30,13 @@ public class implBorrow implements BorrowDAO {
     }
 
     @Override
-    public List<Book> CheckDates() throws SQLException {
+    public void CheckDates() throws SQLException {
         Connection connection = DB.Connect();
         List<Double> isbn = new ArrayList<>();
 
-        String sql = "SELECT b.ISBN, bb.* FROM books b INNER JOIN borrowbook bb ON bb.id_book = b.ISBN WHERE (bb.id) IN( SELECT MAX(id) AS max_id FROM borrowbook GROUP BY id_book, id_membre ) AND bb.date_retour < CURRENT_TIMESTAMP()";
-
+        String sql = "SELECT b.ISBN, bb.* FROM books b INNER JOIN borrowbook bb ON bb.id_book = b.ISBN WHERE b.status = ? AND (bb.date_emprunt) IN( SELECT MAX(date_emprunt) AS max_id FROM borrowbook GROUP BY id_book, id_membre )AND bb.date_retour < CURRENT_TIMESTAMP();";
         PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, String.valueOf(status.enprunté));
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             isbn.add(rs.getDouble("ISBN"));
@@ -53,7 +53,6 @@ public class implBorrow implements BorrowDAO {
 
         bookDAO bookdao = new implBook();
         List<Book> books = bookdao.getBooksByStatus(String.valueOf(status.perdu));
-        return books;
     }
 
 }
